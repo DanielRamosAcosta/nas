@@ -9,7 +9,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   sops.defaultSopsFile = ./secrets/secrets.yaml;
-  sops.secrets."users/cris/password" = {};
+  sops.secrets."users/cris/hashedPassword" = {};
 
   services.openssh = {
     enable = true;
