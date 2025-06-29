@@ -3,3 +3,5 @@ temp.*
 ._DS_Store
 .DS_Store
 *.pdf
+
+*.priv.yaml
