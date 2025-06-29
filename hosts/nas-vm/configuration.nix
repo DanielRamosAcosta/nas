@@ -33,7 +33,7 @@
 
   users.users.cris = {
     isNormalUser = true;
-    password = config.sops.secrets."users/cris/password".path;
+    hashedPasswordFile = config.sops.secrets."users/cris/hashedPassword".path;
   };
 
   security.sudo.extraRules = [
