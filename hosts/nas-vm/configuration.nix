@@ -10,6 +10,7 @@
 
   sops.defaultSopsFile = ./secrets/secrets.yaml;
   sops.secrets."users/cris/hashedPassword" = {};
+  sops.secrets."users/dani/hashedPassword" = {};
 
   services.openssh = {
     enable = true;
@@ -25,7 +26,7 @@
   users.users.dani = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
-    hashedPassword = "$6$MwMQPs6Ua99s/Mpq$Imm8SbjeIGJZRkib6If.jdSfdLfqzuGKa/wykGoXOzvk7bekQpMVNaqadO63KIbjx9UFRRgKfFvg.hvyJrw39/";
+    hashedPasswordFile = config.sops.secrets."users/dani/hashedPassword".path;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKq21O6t1Q2QHfp9ypCIeDUqJ0PjauigrMXKKvvVL4I/ dani@mac"
     ];
