@@ -8,7 +8,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  sops.defaultSopsFile = ./secrets/secrets.yaml;
+  sops.defaultSopsFile = builtins.path {
+    name = "secrets.yaml";
+    path = ./secrets/secrets.yaml;
+  };
   sops.secrets."users/cris/password" = {};
 
   services.openssh = {
@@ -30,9 +33,10 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKq21O6t1Q2QHfp9ypCIeDUqJ0PjauigrMXKKvvVL4I/ dani@mac"
     ];
   };
+
   users.users.cris = {
     isNormalUser = true;
-    password = config.sops.secrets."users/cris/password";
+    password = config.sops.secrets."users/cris/password".path;
   };
 
   security.sudo.extraRules = [
