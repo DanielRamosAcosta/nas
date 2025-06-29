@@ -8,6 +8,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  sops.defaultSopsFile = ./secrets/secrets.yaml;
+  sops.secrets."users/cris/password" = {};
+
   services.openssh = {
     enable = true;
     settings = {
@@ -29,7 +32,7 @@
   };
   users.users.cris = {
     isNormalUser = true;
-    password = "password";
+    password = config.sops.secrets."users/cris/password";
   };
 
   security.sudo.extraRules = [
