@@ -21,9 +21,9 @@ local u = import 'utils.libsonnet';
   local initScriptConfigMapName = initScriptVolumeName,
   local initScriptData = importstr './postgres.init.sh',
 
-  new(image = 'ghcr.io/immich-app/postgres', version):: {
+  new(image):: {
     statefulSet: statefulSet.new('postgres', replicas=1, containers=[
-      container.new('postgres', u.image(image, version)) +
+      container.new('postgres', image) +
       container.withPorts(
         [containerPort.new('db', 5432)]
       ) +
