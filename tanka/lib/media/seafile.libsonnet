@@ -47,7 +47,7 @@ local immichConfig = importstr './immich.config.json';
     service: k.util.serviceFor(self.statefulSet),
 
     configEnv: u.configMap.forEnv(self.statefulSet, {
-      DB_HOSTNAME: 'postgres.databases.svc.cluster.local',
+      DB_HOST: 'mariadb.databases.svc.cluster.local',
       DB_USERNAME: 'immich',
       REDIS_HOSTNAME: 'valkey.databases.svc.cluster.local',
       IMMICH_CONFIG_FILE: '/app/config/immich.json',
