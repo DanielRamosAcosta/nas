@@ -7,11 +7,11 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
   local containerPort = k.core.v1.containerPort,
   local volumeMount = k.core.v1.volumeMount,
 
-  new(image='ghcr.io/hotio/sonarr', version):: {
-    statefulSet: statefulSet.new('sonarr', replicas=1, containers=[
-                   container.new('sonarr', u.image(image, version)) +
+  new(image='ghcr.io/hotio/radarr', version):: {
+    statefulSet: statefulSet.new('radarr', replicas=1, containers=[
+                   container.new('radarr', u.image(image, version)) +
                    container.withPorts([
-                     containerPort.new('http', 8989),
+                     containerPort.new('http', 7878),
                    ]) +
                    container.withEnv(
                      u.envVars.fromConfigMap(self.configEnv)
@@ -22,7 +22,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
                    ]),
                  ]) +
                  statefulSet.spec.template.spec.withVolumes([
-                   u.volume.fromHostPath('config', '/data/arr/sonarr'),
+                   u.volume.fromHostPath('config', '/data/arr/radarr'),
                    u.volume.fromHostPath('data', '/cold-data/media'),
                  ]),
 
@@ -33,7 +33,6 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       PGID: '100',
       UMASK: '002',
       TZ: 'Europe/Madrid',
-      SONARR__LOG__CONSOLEFORMAT: 'Clef',
     }),
   },
 }

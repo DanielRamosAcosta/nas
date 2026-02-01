@@ -5,35 +5,38 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
   local statefulSet = k.apps.v1.statefulSet,
   local container = k.core.v1.container,
   local containerPort = k.core.v1.containerPort,
+  local volume = k.core.v1.volume,
   local volumeMount = k.core.v1.volumeMount,
 
-  new(image='ghcr.io/hotio/sonarr', version):: {
-    statefulSet: statefulSet.new('sonarr', replicas=1, containers=[
-                   container.new('sonarr', u.image(image, version)) +
+  new(image='docker.io/jlesage/jdownloader-2', version):: {
+    statefulSet: statefulSet.new('jdownloader', replicas=1, containers=[
+                   container.new('jdownloader', u.image(image, version)) +
                    container.withPorts([
-                     containerPort.new('http', 8989),
+                     containerPort.new('web', 5800),
+                     containerPort.new('myjd', 3129),
                    ]) +
                    container.withEnv(
                      u.envVars.fromConfigMap(self.configEnv)
                    ) +
                    container.withVolumeMounts([
                      volumeMount.new('config', '/config'),
-                     volumeMount.new('data', '/data'),
+                     volumeMount.new('downloads', '/output'),
                    ]),
                  ]) +
                  statefulSet.spec.template.spec.withVolumes([
-                   u.volume.fromHostPath('config', '/data/arr/sonarr'),
-                   u.volume.fromHostPath('data', '/cold-data/media'),
+                   u.volume.fromHostPath('config', '/data/jdownloader/config'),
+                   u.volume.fromHostPath('downloads', '/cold-data/downloads'),
                  ]),
 
     service: k.util.serviceFor(self.statefulSet),
 
     configEnv: u.configMap.forEnv(self.statefulSet, {
-      PUID: '1000',
-      PGID: '100',
-      UMASK: '002',
+      USER_ID: '1000',
+      GROUP_ID: '100',
+      KEEP_APP_RUNNING: '1',
+      DISPLAY_WIDTH: '1920',
+      DISPLAY_HEIGHT: '1080',
       TZ: 'Europe/Madrid',
-      SONARR__LOG__CONSOLEFORMAT: 'Clef',
     }),
   },
 }
